@@ -133,6 +133,11 @@ classinfo = {
     ]
 }
 
+@app.route("/the/<name>")
+def start(name=None):
+    name = name or "Julius"
+    return render_template('index.html', name=name)
+
 @app.route("/")
 def welcome():
     return f"Welcome to my page\n"
