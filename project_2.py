@@ -5,20 +5,12 @@
 def showInstructions():
   #print a main menu and the commands
   print('''
-
-The Game of Life!
+RPG Game
 ========
 Commands:
-
-  go [direction] Type the direction north, south, east, west.
-  get [item]
-
-  go [1, 2, 3, 4] You can type in any of those numbers to get to a special room.
-  get [item]
-
-  go [5, 6, 7, 8] You can type in any of those numbers to get to a special room.
-  get [item]
-  
+  go [direction] - north, south, east, west.
+  get [item] - Get the item.
+  teleport [room] - To go to a new room.
 ''')
 
 def showStatus():
@@ -29,88 +21,54 @@ def showStatus():
   print('Inventory : ' + str(inventory))
   #print an item if there is one
   if "item" in rooms[currentRoom]:
-    print('You are currently in room ' + rooms[currentRoom] + ' and you have a '['item'])
+    print('You see a ' + str(rooms[currentRoom]['item']))
   print("---------------------------")
-
+  
 #an inventory, which is initially empty
 inventory = []
 
+# added dictionary for item descriptions
+desc = {
+          'key': 'You have the key to the fortress!',
+          'potion': 'You just got the magic potion!',
+          'pot': 'You have the pot use it wisely!',
+          'cookie': 'You have the cookie, Yum!',
+          'staff': 'You have the magic staff!',
+          'knife': 'Man that knife is sharp!',
+          'cake' : 'I hope that cake tastes good as the cookie!'
+}
+
 #a dictionary linking a room to other rooms
 ## A dictionary linking a room to other rooms
-
+# added multiple items to the rooms
 rooms = {
 
             'Hall' : {
                   'south' : 'Kitchen',
                   'east'  : 'Dining Room',
-                  'item'  : 'Breakfast'
+                  'item'  : 'key'
                 },
 
-            'Bathroom' : {
+            'Kitchen' : {
                   'north' : 'Hall',
-                  'item'  : 'Toothbrush',
+                  'item'  : 'monster'
                 },
             'Dining Room' : {
                   'west' : 'Hall',
                   'south': 'Garden',
-                  'item' : 'Bagel',
+                  'item' : ['potion', 'staff'],
                   'north' : 'Pantry',
                },
             'Garden' : {
                   'north' : 'Dining Room',
-                  'item'  : 'Fresh Veggie'
+                  'item'  : ['pot', 'knife']
                },
             'Pantry' : {
                   'south' : 'Dining Room',
-                  'item' : 'cookie',
-            }
+                  'west'  : 'Hall',
+                  'item' : ['cookie', 'cake']
+            },
          }
-
-room_2 = {
-
-        'Parking Lot': {
-            '1': 'Emergency Exit',
-            '2': 'Exit Ramp',
-            '3' : 'Elevator',
-            '4' : 'Stairs',
-            'item'  : 'Parking Token'
-            },
-
-        'Subway': {
-            '1': 'Train',
-            '2': 'Stairs to the street',
-            '3' : 'Ticket booth',
-            '4' : 'Trip home',
-            'item' : 'Train Pass'
-            },
-
-        'Gym': {
-            '1': 'Leg Machine',
-            '2': 'Bench',
-            '3' : 'Cardio Bike',
-            '4' : 'Shake stand',
-            'item' : 'Free Gym Pass'
-            }
-        }
-
-room_3 = {
-
-        'Before Work': {
-            '5': 'Gym',
-            '6': 'Coffee',
-            '7' : 'Bike to work',
-            '8' : 'Take train to work',
-            'item' : 'Day off from work'
-            },
-
-        'During work': {
-            '5' : 'Go to IT',
-            '6' : 'Meeting',
-            '7'  : 'Lunch',
-            '8'  : 'Go Home',
-            'item' : 'Extended Lunch Break'
-            },
-        }
 
 #start the player in the Hall
 currentRoom = 'Hall'
@@ -144,6 +102,14 @@ while True:
     else:
         print('You can\'t go that way!')
 
+  if move[0] == 'teleport':
+    if move[1].capitalize() in rooms:
+      currentRoom = move[1].capitalize()
+      print("You are now in", move[1].capitalize())
+    else:
+      print("Sorry that room doesn't exist")
+      # Teleport method for going to different rooms
+      
   #if they type 'get' first
   if move[0] == 'get' :
     #if the room contains an item, and the item is the one they want to get
@@ -151,7 +117,7 @@ while True:
       #add the item to their inventory
       inventory += [move[1]]
       #display a helpful message
-      print(move[1] + ' got!')
+      print(move[1] + ' got!', desc[move[1]])
       #delete the item from the room
       del rooms[currentRoom]['item']
     #otherwise, if the item isn't there to get
@@ -163,7 +129,9 @@ while True:
   if currentRoom == 'Garden' and 'key' in inventory and 'potion' in inventory:
     print('You escaped the house with the ultra rare key and magic potion... YOU WIN!')
     break
-
+  elif currentRoom == 'Pantry' and 'key' in inventory and 'cookie' in inventory:
+    print('You escaped the house with the ultra rare key and the cookie so eat up... YOU WIN!')
+    break
   ## If a player enters a room with a monster
   elif 'item' in rooms[currentRoom] and 'monster' in rooms[currentRoom]['item']:
     print('A monster has got you... GAME OVER!')
