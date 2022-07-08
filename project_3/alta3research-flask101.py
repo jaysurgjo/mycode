@@ -141,17 +141,5 @@ def welcome():
 def get_names():
     return jsonify(classinfo)
 
-@app.route("/goodbye")
-def goodbye():
-    return f"Thank you for visiting my page!"
-
-@app.route("/template")
-def render_template():
-    return render_template("index.html")
-
-@app.route("/other")
-def there():
-    return f"Hey you made it here!"
-
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=2224)
