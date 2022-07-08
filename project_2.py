@@ -10,7 +10,7 @@ RPG Game
 Commands:
   go [direction] - north, south, east, west.
   get [item] - Get the item.
-  teleport [room] - To go to a new room.
+  teleport [room] - hall, kitchen, garden, dining room, pantry.
 ''')
 
 def showStatus():
